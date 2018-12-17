@@ -1,5 +1,6 @@
 package algorithm;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -44,23 +45,26 @@ public class SimulatedAnnealing {
 	}
 	
 	private Graph.Solution getNewSolution(Graph.Solution src) {
-		Graph.Solution ret = src.clone();
+		ArrayList<Graph.Solution> ret = new ArrayList<Graph.Solution>();
+		Graph.Solution ret2 = src.clone();
+		Graph.Solution ret3 = src.clone();
+		Graph.Solution ret4 = src.clone();
 		
 		/*TODO define the modify operate*/
 		Random rand = new Random();
-		int[] line = ret.getData();
+		int[] line = ret1.getData();
 		
 		int u = 0, v = 0, w = 0, temp = 0;
-		switch(Math.abs(rand.nextInt()) % 4) {
-			case 0:
+		//switch(Math.abs(rand.nextInt()) % 4) {
+		//	case 0:
 				u = Math.abs(rand.nextInt()) % line.length;
 				v = Math.abs(rand.nextInt()) % line.length;
 				temp = line[u];
 				line[u] = line[v];
 				line[v] = temp;
-				break;
-				
-			case 1:
+		//		break;
+		line = ret2.getData();		
+		//	case 1:
 				u = Math.abs(rand.nextInt()) % (line.length - 1);
 				v = Math.abs(rand.nextInt()) % (line.length - u - 1) + u + 1;
 				for (int i = u; i < (u + v) / 2; i++) {
@@ -68,9 +72,9 @@ public class SimulatedAnnealing {
 					line[i] = line[v - i + u];
 					line[v - i + u] = temp;
 				}
-				break;
-				
-			case 2:
+		//		break;
+		line = ret3.getData();		
+		//	case 2:
 				u = Math.abs(rand.nextInt()) % line.length;
 				v = Math.abs(rand.nextInt()) % line.length;
 				temp = line[u];
@@ -82,9 +86,9 @@ public class SimulatedAnnealing {
 				temp = line[u];
 				line[u] = line[v];
 				line[v] = temp;
-				break;
-			
-			case 3:
+		//		break;
+		line = ret3.getData();	
+		//	case 3:
 				u = Math.abs(rand.nextInt()) % (line.length - 2);
 				v = Math.abs(rand.nextInt()) % (line.length - u - 2) + u + 1;
 				w = Math.abs(rand.nextInt()) % (line.length - v - 1) + v + 1;
@@ -95,7 +99,7 @@ public class SimulatedAnnealing {
 				for (int i = w - v + u, j = 0; i < w + 1; i++, j++) {
 					line[i] = tempArr[j];
 				}
-				break;
+		//		break;
 		}
 		return ret;
 	}
