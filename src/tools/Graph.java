@@ -37,15 +37,11 @@ public class Graph {
 		for (int i = 0; i < this.size - 1; i++) {
 			ret += this.map[s.line[i]][s.line[i + 1]];
 		}
-		ret += this.map[s.line[0]][s.line[Graph.this.size]];
+		ret += this.map[s.line[0]][s.line[Graph.this.size - 1]];
 		return ret;
 	}
 	
-	//To modify the solution, which depends on the specific algorithm
-	public interface Change {
-		void change1();
-		void change2();
-	}
+	
 	
 	private void readFromXml(String filePath) {
 		SAXReader reader = new SAXReader();
@@ -109,13 +105,35 @@ public class Graph {
 			this.line = Arrays.copyOf(src, Graph.this.size);
 		}
 		
+		public int[] getData() {
+			return this.line;
+		}
+		
 		public Solution clone() {
 			Solution ret = new Solution(this.line);
 			return ret;
+		}
+		
+		public String toString() {
+			String str = "(" + line[0];
+			for (int i = 1; i < this.line.length; i++) {
+				str += ", " + line[i];
+			}
+			str += ")";
+			return str;
+		}
+		
+		public boolean equals(Solution src) {
+			if (this.line.length != src.line.length) return false;
+			for (int i = 0; i < this.line.length; i++) {
+				if (this.line[i] != src.line[i]) return false;
+			}
+			return true;
 		}
 	}
 	
 	public static void main(String[] args) {
 		Graph g = new Graph("data/a280.xml");
 	}
+
 }
