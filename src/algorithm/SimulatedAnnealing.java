@@ -8,10 +8,10 @@ import tools.Graph;
 public class SimulatedAnnealing {
 	private Graph graph;
 	private Graph.Solution solution;
-	private int temperature = 100;
+	private int temperature = 10000;
 	private final static float alpha = 0.95f;
-	private final static int innerLoopTimes = 1000;
-	private final static int outerLoopTimes = 30;
+	private final static int innerLoopTimes = 50000;
+	private final static int outerLoopTimes = 100;
 	
 	
 	public SimulatedAnnealing(String filePath) {
@@ -88,11 +88,11 @@ public class SimulatedAnnealing {
 				u = Math.abs(rand.nextInt()) % (line.length - 2);
 				v = Math.abs(rand.nextInt()) % (line.length - u - 2) + u + 1;
 				w = Math.abs(rand.nextInt()) % (line.length - v - 1) + v + 1;
-				int[] tempArr = Arrays.copyOfRange(line, u, v);
+				int[] tempArr = Arrays.copyOfRange(line, u, v + 1);
 				for (int i = u, j = v + 1; j < w + 1; i++, j++) {
 					line[i] = line[j];
 				}
-				for (int i = w - v + u + 1, j = 0; i < w + 1; i++, j++) {
+				for (int i = w - v + u, j = 0; i < w + 1; i++, j++) {
 					line[i] = tempArr[j];
 				}
 				break;
@@ -111,6 +111,26 @@ public class SimulatedAnnealing {
 	public static void main(String[] args) {
 		SimulatedAnnealing test = new SimulatedAnnealing("data/a280.xml");
 		test.run();
+		/*Random rand = new Random();
+		int[] line =  new int[5];
+		for (int i = 0; i < 5; i++) {
+			line[i] = i;
+		}
+		int temp = 0;
+		int u = Math.abs(rand.nextInt()) % (line.length - 2);
+		int v = Math.abs(rand.nextInt()) % (line.length - u - 2) + u + 1;
+		int w = Math.abs(rand.nextInt()) % (line.length - v - 1) + v + 1;
+		int[] tempArr = Arrays.copyOfRange(line, u, v + 1);
+		for (int i = u, j = v + 1; j < w + 1; i++, j++) {
+			line[i] = line[j];
+		}
+		for (int i = w - v + u, j = 0; i < w + 1; i++, j++) {
+			line[i] = tempArr[j];
+		}
+		System.out.println("u: " + u + " v: " + v + " w: " + w);
+		for(int i = 0; i < 5; i++) {
+			System.out.print(line[i] + " ");
+		}*/
 	}
 	
 }
