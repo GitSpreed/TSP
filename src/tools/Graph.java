@@ -80,6 +80,7 @@ public class Graph {
 			for (int i = 0; i < line.length; i++) {
 				line[i] = i;
 			}
+			System.out.println("I'm ruby.");
 		}
 		
 		public Solution(int[] src) {
