@@ -2,16 +2,18 @@ package algorithm;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import tools.Graph;
 
 public class Genetic {
 	
-	private static final int totalNumberOfIndividuals = 100;
-	private static final int numberOfReserved = 20;
-	private static final int numberOfGeneration = 1000;
-	private static final float ProbabilityOfMutation = 0.3f;
+	private static final int totalNumberOfIndividuals = 500;
+	private static final int numberOfReserved = 50;
+	private static final int numberOfGeneration = 10000;
+	private static final float ProbabilityOfMutation = 0.5f;
 	
 	private Graph graph;
 	private Gen[] population;
@@ -26,11 +28,11 @@ public class Genetic {
 		this.sortPopulation();
 	}
 	
-	public void run() {
+	public float run() {
 		Random rand = new Random();
 		for (int i = 0; i < Genetic.numberOfGeneration; i++) {
 			for (int j = Genetic.numberOfReserved; j < Genetic.totalNumberOfIndividuals; j++) {
-				if (i == Genetic.totalNumberOfIndividuals - 1 || Math.random() < Genetic.ProbabilityOfMutation) {
+				if (Math.random() < Genetic.ProbabilityOfMutation) {
 					int randNum = Math.abs(rand.nextInt()) % Genetic.numberOfReserved;
 					population[j] = this.geneticMutation(population[randNum]);
 				} else {
@@ -39,21 +41,38 @@ public class Genetic {
 					do {
 						randm = Math.abs(rand.nextInt()) % Genetic.numberOfReserved;
 					} while (randf == randm);
-					
-					Gen[] tempArr = this.geneticCrossover(population[randf], population[randm]);
-					population[j++] = tempArr[0];
-					population[j] = tempArr[1];
+					population[j] = this.geneticCrossover(population[randf], population[randm]);
 				}
 			}
 			this.sortPopulation();
-			System.out.println(graph.getAllCost(population[0]) + ": " + population[0].toString());
+			//System.out.println(graph.getAllCost(population[0]) + ": " + population[0].toString());
 		}
-		
+		return graph.getAllCost(population[0]);
 	}
 	
-	private Gen[] geneticCrossover(Gen father, Gen mother) {
+	private Gen geneticCrossover(Gen father, Gen mother) {
+		Gen ret = new Gen(this.graph, father.getData());
+		int[] data = ret.getData();
 		
-		return null;
+		Random rand = new Random();
+		int num = Math.abs(rand.nextInt()) % this.graph.getSize();
+		int[] positions = new int[num];
+		Set<Integer> set = new HashSet<Integer>();
+		for (int i = 0; i < num; i++) { 
+			positions[i] = Math.abs(rand.nextInt()) % this.graph.getSize();
+			set.add(data[positions[i]]);
+		}
+		
+		int index = 0;
+		int[] mdata = mother.getData();
+		for (int i = 0; i < data.length; i++) {
+			while (index < mdata.length && set.contains(mdata[index])) index++;
+			if (!set.contains(data[i])) {
+				data[i] = mdata[index++];
+			}
+		}
+		ret.setCost(this.graph.getAllCost(ret));
+		return ret;
 	}
 	
 	private Gen geneticMutation(Gen father) {
@@ -139,6 +158,13 @@ public class Genetic {
 		
 		public float getCost() {
 			return this.cost;
+		}
+	}
+	
+	public static void main(String[] args) {
+		for (int i = 0; i < 10; i++) {
+			Genetic algorithm = new Genetic("data/bier127.xml");
+			System.out.print(algorithm.run() + ", ");
 		}
 	}
 }

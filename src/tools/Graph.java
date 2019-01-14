@@ -72,6 +72,10 @@ public class Graph {
 		
 	}
 	
+	public int getSize() {
+		return this.size;
+	}
+	
 	public class Solution {
 		private int[] line;
 		
